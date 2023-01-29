@@ -17,7 +17,13 @@ const LandingPage = () => {
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
-    const addData = {
+
+    if(newData.id){
+      console.log(newData);
+      // setDatas()
+
+    }else{
+       const addData = {
       id:
         String(event.target.name.value).slice(0, 3) +
         String(time.getTime()) +
@@ -28,8 +34,25 @@ const LandingPage = () => {
     setDatas([...datas, addData]);
     localStorage.setItem('stored_data', JSON.stringify([...datas, addData]));
 
+    }
+   
+
     document.getElementById('inputFormId').reset();
   };
+
+  const handleDelete=(id)=>{
+    const removedData=datas.filter(item=>item?.id !== id);
+    setDatas(removedData);
+    localStorage.setItem('stored_data', JSON.stringify(removedData));
+  }
+  const handleUpdate=(item)=>{
+
+    setNewData(item);
+    
+    // const removedData=datas.find(item=>item?.id === id);
+    // setDatas(removedData);
+    // localStorage.setItem('stored_data', JSON.stringify(removedData));
+  }
 
   useEffect(() => {
     const storedData = localStorage.getItem('stored_data');
@@ -42,10 +65,10 @@ const LandingPage = () => {
   //     localStorage.setItem('stored_data', JSON.stringify(datas));
   // }, [datas]);
 
-  console.log(datas);
+  // console.log(newData);
   return (
     <div>
-      <h1>Local Storage Crud Operation</h1>
+      {/* <h1>Local Storage Crud Operation</h1> */}
       <hr />
 
       <form
@@ -56,17 +79,20 @@ const LandingPage = () => {
           type='text'
           name='name'
           placeholder='Name'
+          defaultValue={newData?.name}
           onBlur={(e) => handleOnBlur(e)}
         />
         <input
           type='text'
           name='address'
           placeholder='Address'
+          defaultValue={newData?.address}
           onBlur={(e) => handleOnBlur(e)}
         />
         <input
           type='date'
           name='dob'
+          defaultValue={newData?.dob}
           onBlur={(e) => handleOnBlur(e)}
         />
         <input
@@ -78,8 +104,8 @@ const LandingPage = () => {
         {datas.map((item) => (
           <ul key={item?.id} style={{listStyleType:'none'}}>
             <li>{item?.name}</li>
-            <button type='button'>Update</button>
-            <button type='button'>Delete</button>
+            <button onClick={()=>handleUpdate(item)} type='button'>Update</button>
+            <button onClick={()=>handleDelete(item?.id)} type='button'>Delete</button>
           </ul>
         ))}
       </div>
