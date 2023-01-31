@@ -12,47 +12,45 @@ const LandingPage = () => {
     data[name] = value;
 
     setNewData(data);
-
   };
 
   const handleOnSubmit = (event) => {
     event.preventDefault();
 
-    if(newData.id){
-      console.log(newData);
-      // setDatas()
+    if (newData.id) {
+      const upData = [
+        ...datas.filter((item) => item.id !== newData.id),
+        newData,
+      ];
 
-    }else{
-       const addData = {
-      id:
-        String(event.target.name.value).slice(0, 3) +
-        String(time.getTime()) +
-        String(Math.ceil(Math.random(7) * 100000)),
-      ...newData,
-    };
+      setDatas(upData);
+      localStorage.setItem('stored_data', JSON.stringify(upData));
+      setNewData([]);
+      // console.log(upData);
+    } else {
+      const addData = {
+        id:
+          String(event.target.name.value).slice(0, 3) +
+          String(time.getTime()) +
+          String(Math.ceil(Math.random(7) * 100000)),
+        ...newData,
+      };
 
-    setDatas([...datas, addData]);
-    localStorage.setItem('stored_data', JSON.stringify([...datas, addData]));
-
+      setDatas([...datas, addData]);
+      localStorage.setItem('stored_data', JSON.stringify([...datas, addData]));
     }
-   
 
     document.getElementById('inputFormId').reset();
   };
 
-  const handleDelete=(id)=>{
-    const removedData=datas.filter(item=>item?.id !== id);
+  const handleDelete = (id) => {
+    const removedData = datas.filter((item) => item?.id !== id);
     setDatas(removedData);
     localStorage.setItem('stored_data', JSON.stringify(removedData));
-  }
-  const handleUpdate=(item)=>{
-
+  };
+  const handleUpdate = (item) => {
     setNewData(item);
-    
-    // const removedData=datas.find(item=>item?.id === id);
-    // setDatas(removedData);
-    // localStorage.setItem('stored_data', JSON.stringify(removedData));
-  }
+  };
 
   useEffect(() => {
     const storedData = localStorage.getItem('stored_data');
@@ -68,11 +66,12 @@ const LandingPage = () => {
   // console.log(newData);
   return (
     <div>
-      {/* <h1>Local Storage Crud Operation</h1> */}
+      <h1>Local Storage Crud Operation</h1>
       <hr />
 
       <form
         onSubmit={(event) => handleOnSubmit(event)}
+        style={{ paddingTop: '20px' }}
         id='inputFormId'
       >
         <input
@@ -97,15 +96,28 @@ const LandingPage = () => {
         />
         <input
           type='submit'
-          value='Add New'
+          value='Add / Update'
         />
       </form>
-      <div style={{textAlign:'start'}}>
+      <div style={{ textAlign: 'start' }}>
         {datas.map((item) => (
-          <ul key={item?.id} style={{listStyleType:'none'}}>
+          <ul
+            key={item?.id}
+            style={{ listStyleType: 'none' }}
+          >
             <li>{item?.name}</li>
-            <button onClick={()=>handleUpdate(item)} type='button'>Update</button>
-            <button onClick={()=>handleDelete(item?.id)} type='button'>Delete</button>
+            <button
+              onClick={() => handleUpdate(item)}
+              type='button'
+            >
+              Update
+            </button>
+            <button
+              onClick={() => handleDelete(item?.id)}
+              type='button'
+            >
+              Delete
+            </button>
           </ul>
         ))}
       </div>
