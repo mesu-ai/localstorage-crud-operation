@@ -18,15 +18,29 @@ const LandingPage = () => {
     event.preventDefault();
 
     if (newData.id) {
-      const upData = [
-        ...datas.filter((item) => item.id !== newData.id),
-        newData,
-      ];
+      // one way
+      // const upData = [
+      //   ...datas.filter((item) => item.id !== newData.id),
+      //   newData,
+      // ];
 
+      // another way
+
+    
+        const upData = datas.map(item=>{
+          if(item.id===newData.id){
+            return newData;
+          }
+          return item;
+        })
+      
+
+
+      // console.log(upData);
       setDatas(upData);
       localStorage.setItem('stored_data', JSON.stringify(upData));
       setNewData([]);
-      // console.log(upData);
+      
     } else {
       const addData = {
         id:
